@@ -59,17 +59,21 @@ public class DependencyInjector {
                 method.setAccessible(true);
                 try {
                     final Object dynamicDependency = method.invoke(obj);
-                    for (Class<?> c : dynamicDependency.getClass().getInterfaces()) {
-                        if (!dependencies.containsKey(c)) {
-                            dependencies.put(c, dynamicDependency);
-                        }
-                    }
-                    dependencies.put(dynamicDependency.getClass(), dynamicDependency);
+                    addDependency(dynamicDependency);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(String.format("Cannot invoke 0-args postConstruct with name %s in class %s", method.getName(), classToInstantiate.getCanonicalName()), e);
                 }
             }
         }
         return obj;
+    }
+
+    private void addDependency(Object dependency) {
+        dependencies.put(dependency.getClass(), dependency);
+        for (Class<?> c : dependency.getClass().getInterfaces()) {
+            if (!dependencies.containsKey(c)) {
+                dependencies.put(c, dependency);
+            }
+        }
     }
 }
