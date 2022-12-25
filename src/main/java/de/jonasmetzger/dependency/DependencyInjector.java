@@ -15,7 +15,10 @@ public class DependencyInjector {
     private final Map<Class<?>, Object> dependencies = new HashMap<>();
 
     public <T> T getDependency(Class<T> classToFetch) {
-        return (T) dependencies.get(classToFetch);
+        if (dependencies.containsKey(classToFetch)) {
+            return (T) dependencies.get(classToFetch);
+        }
+        return null;
     }
 
     public void registerDependency(Class<?> classToRegister, Object objToRegister) {
@@ -56,6 +59,11 @@ public class DependencyInjector {
                 method.setAccessible(true);
                 try {
                     final Object dynamicDependency = method.invoke(obj);
+                    for (Class<?> c : dynamicDependency.getClass().getInterfaces()) {
+                        if (!dependencies.containsKey(c)) {
+                            dependencies.put(c, dynamicDependency);
+                        }
+                    }
                     dependencies.put(dynamicDependency.getClass(), dynamicDependency);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(String.format("Cannot invoke 0-args postConstruct with name %s in class %s", method.getName(), classToInstantiate.getCanonicalName()), e);

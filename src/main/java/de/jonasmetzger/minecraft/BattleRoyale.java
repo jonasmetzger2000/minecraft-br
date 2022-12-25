@@ -20,9 +20,13 @@ public class BattleRoyale extends JavaPlugin {
     @Override
     public void onEnable() {
         devReload();
-        addDefaultDependencies();
-        dependencyInjector.instantiate(DefaultConfig.class).load();
-        dependencyInjector.instantiate(DatabaseClient.class);
+        try {
+            addDefaultDependencies();
+            dependencyInjector.instantiate(DefaultConfig.class).load();
+            dependencyInjector.instantiate(DatabaseClient.class);
+        } catch (Exception e) {
+            getLogger().log(Level.SEVERE, "Dependency Injection failed", e);
+        }
     }
 
     void addDefaultDependencies() {
