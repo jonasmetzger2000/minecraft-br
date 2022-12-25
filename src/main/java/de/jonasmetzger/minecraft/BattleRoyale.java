@@ -1,11 +1,16 @@
 package de.jonasmetzger.minecraft;
 
+import com.mongodb.client.MongoDatabase;
 import de.jonasmetzger.config.DefaultConfig;
+import de.jonasmetzger.database.DatabaseClient;
 import de.jonasmetzger.dependency.DependencyInjector;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BattleRoyale extends JavaPlugin {
 
@@ -17,11 +22,13 @@ public class BattleRoyale extends JavaPlugin {
         devReload();
         addDefaultDependencies();
         dependencyInjector.instantiate(DefaultConfig.class).load();
+        dependencyInjector.instantiate(DatabaseClient.class);
     }
 
     void addDefaultDependencies() {
         dependencyInjector.registerDependency(FileConfiguration.class, getConfig());
         dependencyInjector.registerDependency(JavaPlugin.class, this);
+        dependencyInjector.registerDependency(Logger.class, getLogger());
     }
 
     void devReload() {

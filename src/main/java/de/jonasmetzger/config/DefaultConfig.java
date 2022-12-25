@@ -20,8 +20,7 @@ public class DefaultConfig {
     }
 
     private void addDefaults() {
-        setDefault("mongo.db.username", "username");
-        setDefault("mongo.db.password", "password");
+        setDefault("mongo.db.connectionString", "mongodb://username:password@mongo:27017/");
         setDefault("mongo.db.database", "battle-royale");
     }
 
