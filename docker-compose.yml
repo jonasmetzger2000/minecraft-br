@@ -1,0 +1,38 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+
+  minecraft-server:
+    image: itzg/minecraft-server
+    ports:
+      - 25565:25565
+    environment:
+      TYPE: PAPER
+      EULA: "TRUE"
+      DIFFICULTY: hard
+      MAX_PLAYERS: 42
+      SPAWN_PROTECTION: 0
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    volumes:
+      # attach a directory relative to the directory containing this compose file
+      - ./server:/data
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: $MONGO_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD: $MONGO_PASSWORD
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: $MONGO_USERNAME
+      ME_CONFIG_MONGODB_ADMINPASSWORD: $MONGO_PASSWORD
+      ME_CONFIG_MONGODB_URL: mongodb://$MONGO_USERNAME:$MONGO_PASSWORD@mongo:27017/
