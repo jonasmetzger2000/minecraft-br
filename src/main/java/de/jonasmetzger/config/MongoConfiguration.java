@@ -2,14 +2,13 @@ package de.jonasmetzger.config;
 
 import de.jonasmetzger.dependency.DynamicDependency;
 import de.jonasmetzger.dependency.Inject;
-import lombok.SneakyThrows;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.io.IOException;
 
-public class DefaultConfig {
+public class MongoConfiguration {
 
     @Inject
     FileConfiguration config;

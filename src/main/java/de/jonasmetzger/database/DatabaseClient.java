@@ -1,11 +1,18 @@
 package de.jonasmetzger.database;
 
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import de.jonasmetzger.dependency.DynamicDependency;
 import de.jonasmetzger.dependency.Inject;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
+
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class DatabaseClient {
 
@@ -17,13 +24,22 @@ public class DatabaseClient {
 
     @DynamicDependency
     public MongoDatabase connect() {
-        mongoClient = MongoClients.create(connectionString);
+        mongoClient = MongoClients.create(mongoClientSettings());
         mongoDatabase = mongoClient.getDatabase("battle-royale");
         return mongoDatabase;
     }
 
-    @DynamicDependency("user")
-    public MongoCollection userCollection() {
-        return mongoDatabase.getCollection("users");
+    @DynamicDependency("config")
+    public MongoCollection<ConfigRepository.Configuration> configCollection() {
+        return mongoDatabase.getCollection("config", ConfigRepository.Configuration.class);
+    }
+
+    private MongoClientSettings mongoClientSettings() {
+        final CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
+        final CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
+        return MongoClientSettings.builder()
+                .applyConnectionString(new ConnectionString(connectionString))
+                .codecRegistry(codecRegistry)
+                .build();
     }
 }

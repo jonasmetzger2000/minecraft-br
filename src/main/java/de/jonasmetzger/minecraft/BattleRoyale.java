@@ -1,7 +1,6 @@
 package de.jonasmetzger.minecraft;
 
-import com.mongodb.client.MongoDatabase;
-import de.jonasmetzger.config.DefaultConfig;
+import de.jonasmetzger.config.MongoConfiguration;
 import de.jonasmetzger.database.DatabaseClient;
 import de.jonasmetzger.dependency.DependencyInjector;
 import org.bukkit.Bukkit;
@@ -22,7 +21,7 @@ public class BattleRoyale extends JavaPlugin {
         devReload();
         try {
             addDefaultDependencies();
-            dependencyInjector.instantiate(DefaultConfig.class);
+            dependencyInjector.instantiate(MongoConfiguration.class);
             dependencyInjector.instantiate(DatabaseClient.class);
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "Dependency Injection failed", e);
