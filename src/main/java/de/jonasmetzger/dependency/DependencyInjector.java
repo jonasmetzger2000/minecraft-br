@@ -12,17 +12,30 @@ import java.util.Map;
 
 public class DependencyInjector {
 
-    private final Map<Class<?>, Object> dependencies = new HashMap<>();
+    public static final String DEFAULT_KEY = "default";
+    private final Map<Class<?>, Map<String, Object>> dependencies = new HashMap<>();
 
     public <T> T getDependency(Class<T> classToFetch) {
+        return getDependency(classToFetch, DEFAULT_KEY);
+    }
+
+    public <T> T getDependency(Class<T> classToFetch, String key) {
         if (dependencies.containsKey(classToFetch)) {
-            return (T) dependencies.get(classToFetch);
+            return (T) dependencies.get(classToFetch).get(key);
         }
         return null;
     }
 
     public void registerDependency(Class<?> classToRegister, Object objToRegister) {
-        dependencies.put(classToRegister, objToRegister);
+        registerDependency(classToRegister, DEFAULT_KEY, objToRegister);
+    }
+
+    public void registerDependency(Class<?> classToRegister, String key, Object objToRegister) {
+        dependencies.putIfAbsent(classToRegister, new HashMap<>());
+        final Map<String, Object> classMap = dependencies.get(classToRegister);
+        if (!classMap.containsKey(key)) {
+            classMap.put(key, objToRegister);
+        }
     }
 
     public <T> T instantiate(Class<T> classToInstantiate) {
@@ -41,10 +54,16 @@ public class DependencyInjector {
         // inject fields
         for (Field field : classToInstantiate.getDeclaredFields()) {
             if (field.isAnnotationPresent(Inject.class)) {
+                final Inject declaredAnnotation = field.getDeclaredAnnotation(Inject.class);
                 if (dependencies.containsKey(field.getType())) {
                     field.setAccessible(true);
                     try {
-                        field.set(obj, dependencies.get(field.getType()));
+                        final Map<String, Object> classes = dependencies.get(field.getType());
+                        if (classes.containsKey(declaredAnnotation.value())) {
+                            field.set(obj, classes.get(declaredAnnotation.value()));
+                        } else {
+                            throw new RuntimeException(String.format("Cannot inject class %s with key %s into field %s in class %s", field.getType(), declaredAnnotation.value(), field.getName(), classToInstantiate.getCanonicalName()));
+                        }
                     } catch (IllegalAccessException e) {
                         throw new RuntimeException(String.format("Cannot set field %s in class %s", field.getType().getCanonicalName(), classToInstantiate.getCanonicalName()), e);
                     }
@@ -56,10 +75,13 @@ public class DependencyInjector {
         // find dynamic dependencies
         for (Method method : classToInstantiate.getDeclaredMethods()) {
             if (method.isAnnotationPresent(DynamicDependency.class)) {
+                final DynamicDependency declaredAnnotation = method.getDeclaredAnnotation(DynamicDependency.class);
                 method.setAccessible(true);
                 try {
                     final Object dynamicDependency = method.invoke(obj);
-                    addDependency(dynamicDependency);
+                    for (Class<?> c : dynamicDependency.getClass().getInterfaces()) {
+                        registerDependency(c, declaredAnnotation.value(), dynamicDependency);
+                    }
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(String.format("Cannot invoke 0-args postConstruct with name %s in class %s", method.getName(), classToInstantiate.getCanonicalName()), e);
                 }
@@ -68,12 +90,4 @@ public class DependencyInjector {
         return obj;
     }
 
-    private void addDependency(Object dependency) {
-        dependencies.put(dependency.getClass(), dependency);
-        for (Class<?> c : dependency.getClass().getInterfaces()) {
-            if (!dependencies.containsKey(c)) {
-                dependencies.put(c, dependency);
-            }
-        }
-    }
 }
