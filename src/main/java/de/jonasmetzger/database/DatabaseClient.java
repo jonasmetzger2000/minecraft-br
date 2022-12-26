@@ -6,6 +6,8 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import de.jonasmetzger.config.ConfigRepository;
+import de.jonasmetzger.config.Configuration;
 import de.jonasmetzger.dependency.DynamicDependency;
 import de.jonasmetzger.dependency.Inject;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -25,14 +27,17 @@ public class DatabaseClient {
 
     @DynamicDependency
     public MongoDatabase connect() {
+
         mongoClient = MongoClients.create(mongoClientSettings());
-        mongoDatabase = mongoClient.getDatabase("battle-royale");
+        final CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
+        final CodecRegistry codecRegistry = fromRegistries(getDefaultCodecRegistry(), pojoCodecRegistry);
+        mongoDatabase = mongoClient.getDatabase("battle-royale").withCodecRegistry(codecRegistry);
         return mongoDatabase;
     }
 
     @DynamicDependency("config")
-    public MongoCollection<ConfigRepository.Configuration> configCollection() {
-        return mongoDatabase.getCollection("config", ConfigRepository.Configuration.class);
+    public MongoCollection<Configuration> configCollection() {
+        return mongoDatabase.getCollection("config", Configuration.class);
     }
 
     private MongoClientSettings mongoClientSettings() {

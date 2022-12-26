@@ -1,4 +1,4 @@
-package de.jonasmetzger.config;
+package de.jonasmetzger.database;
 
 import de.jonasmetzger.dependency.DynamicDependency;
 import de.jonasmetzger.dependency.Inject;
