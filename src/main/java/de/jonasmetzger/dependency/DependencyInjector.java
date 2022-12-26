@@ -35,6 +35,7 @@ public class DependencyInjector {
         final Map<String, Object> classMap = dependencies.get(classToRegister);
         if (!classMap.containsKey(key)) {
             classMap.put(key, objToRegister);
+            System.out.println(String.format("Registering Dependency of class %s with key %s and object %s", classToRegister, key, objToRegister));
         }
     }
 
@@ -82,6 +83,7 @@ public class DependencyInjector {
                     for (Class<?> c : dynamicDependency.getClass().getInterfaces()) {
                         registerDependency(c, declaredAnnotation.value(), dynamicDependency);
                     }
+                    registerDependency(dynamicDependency.getClass(), declaredAnnotation.value(), dynamicDependency);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(String.format("Cannot invoke 0-args postConstruct with name %s in class %s", method.getName(), classToInstantiate.getCanonicalName()), e);
                 }

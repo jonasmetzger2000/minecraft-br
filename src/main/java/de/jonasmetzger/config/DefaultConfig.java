@@ -1,34 +1,31 @@
 package de.jonasmetzger.config;
 
+import de.jonasmetzger.dependency.DynamicDependency;
 import de.jonasmetzger.dependency.Inject;
 import lombok.SneakyThrows;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 
 public class DefaultConfig {
 
     @Inject
     FileConfiguration config;
 
-    @SneakyThrows
-    public void load() {
-        File file = new File("battleroyale.yml");
-        if (file.exists()) config.load(file);
-        addDefaults();
-        config.save(file);
-    }
-
-    private void addDefaults() {
-        // Database
-        setDefault("mongo.db.connectionString", "mongodb://username:password@mongo:27017/");
-        setDefault("mongo.db.database", "battle-royale");
-    }
-
-    private void setDefault(String path, Object value) {
-        if (!config.isSet(path)) {
-            System.out.println("Setting default Value to: " + value);
-            config.set(path, value);
+    @DynamicDependency("mongoConnectionString")
+    public String mongoConnectionString() {
+        File file = new File("database.yml");
+        if (file.exists()) {
+            try {
+                config.load(file);
+                return config.getString("mongo.connectionString");
+            } catch (IOException | InvalidConfigurationException e) {
+                throw new RuntimeException("Invalid Configuration file 'database.yml'", e);
+            }
+        } else {
+            throw new RuntimeException("Database configuration is missing!");
         }
     }
 

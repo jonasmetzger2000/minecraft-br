@@ -22,7 +22,7 @@ public class BattleRoyale extends JavaPlugin {
         devReload();
         try {
             addDefaultDependencies();
-            dependencyInjector.instantiate(DefaultConfig.class).load();
+            dependencyInjector.instantiate(DefaultConfig.class);
             dependencyInjector.instantiate(DatabaseClient.class);
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "Dependency Injection failed", e);

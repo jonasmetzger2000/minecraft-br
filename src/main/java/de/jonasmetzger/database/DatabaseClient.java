@@ -6,20 +6,19 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import de.jonasmetzger.dependency.DynamicDependency;
 import de.jonasmetzger.dependency.Inject;
-import org.bukkit.configuration.file.FileConfiguration;
 
 public class DatabaseClient {
 
-    @Inject
-    FileConfiguration fileConfiguration;
+    @Inject("mongoConnectionString")
+    String connectionString;
 
     private MongoClient mongoClient;
     private MongoDatabase mongoDatabase;
 
     @DynamicDependency
     public MongoDatabase connect() {
-        mongoClient = MongoClients.create(fileConfiguration.getString("mongo.db.connectionString"));
-        mongoDatabase = mongoClient.getDatabase(fileConfiguration.getString("mongo.db.database"));
+        mongoClient = MongoClients.create(connectionString);
+        mongoDatabase = mongoClient.getDatabase("battle-royale");
         return mongoDatabase;
     }
 
