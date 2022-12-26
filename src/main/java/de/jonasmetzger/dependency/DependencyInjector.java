@@ -1,8 +1,6 @@
 package de.jonasmetzger.dependency;
 
 
-import lombok.SneakyThrows;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -80,10 +78,7 @@ public class DependencyInjector {
                 method.setAccessible(true);
                 try {
                     final Object dynamicDependency = method.invoke(obj);
-                    for (Class<?> c : dynamicDependency.getClass().getInterfaces()) {
-                        registerDependency(c, declaredAnnotation.value(), dynamicDependency);
-                    }
-                    registerDependency(dynamicDependency.getClass(), declaredAnnotation.value(), dynamicDependency);
+                    registerDependency(method.getReturnType(), declaredAnnotation.value(), dynamicDependency);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(String.format("Cannot invoke 0-args postConstruct with name %s in class %s", method.getName(), classToInstantiate.getCanonicalName()), e);
                 }
