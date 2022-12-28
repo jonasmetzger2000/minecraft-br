@@ -46,7 +46,7 @@ public class ConfigRepository {
     }
 
     public <T> void save(String key, Class<T> classToSave, T objToSave) {
-        save(key, classToSave, objToSave, false);
+        save(key, classToSave, objToSave, true);
     }
 
     public <T> void save(String key, Class<T> classToSave, T objToSave, boolean update) {
@@ -59,15 +59,15 @@ public class ConfigRepository {
     }
 
     public void save(String key, String value) {
-        save(key, value, false);
+        save(key, value, true);
     }
 
     public void save(String key, String value, boolean update) {
         Configuration configuration = collection.find(eq("key", key)).limit(1).first();
         if (Objects.isNull(configuration)) {
-            collection.insertOne(configuration);
+            collection.insertOne(new Configuration(key, value));
         } else {
-            if (update) collection.findOneAndReplace(eq("key", value), new Configuration(key, value));
+            if (update) collection.findOneAndReplace(eq("key", key), new Configuration(key, value));
         }
     }
 }

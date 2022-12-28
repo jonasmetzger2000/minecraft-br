@@ -12,7 +12,7 @@ public class DefaultConfiguration {
 
     public void setDefaults() {
         // game
-        configRepository.save("game.secondsToStart", "600");
+        configRepository.save("game.secondsToStart", "500");
 
         // groups
         configRepository.save("group.default.prefix", Component.class, Component.empty().color(NamedTextColor.WHITE));

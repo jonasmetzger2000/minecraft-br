@@ -50,6 +50,7 @@ public class DependencyInjector {
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(String.format("Cannot construct instance of type %s", classToInstantiate.getCanonicalName()), e);
         }
+        registerDependency(classToInstantiate, obj);
         // inject fields
         for (Field field : classToInstantiate.getDeclaredFields()) {
             if (field.isAnnotationPresent(Inject.class)) {
