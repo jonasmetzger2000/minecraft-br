@@ -6,7 +6,9 @@ import de.jonasmetzger.database.DatabaseClient;
 import de.jonasmetzger.database.MongoConfiguration;
 import de.jonasmetzger.dependency.DependencyInjector;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -25,8 +27,9 @@ public class BattleRoyale extends JavaPlugin {
             addDefaultDependencies();
             dependencyInjector.instantiate(MongoConfiguration.class);
             dependencyInjector.instantiate(DatabaseClient.class);
-            dependencyInjector.instantiate(ConfigRepository.class);
-            dependencyInjector.instantiate(DefaultConfiguration.class).setDefaults();
+            ConfigRepository instantiate = dependencyInjector.instantiate(ConfigRepository.class);
+            instantiate.save("test", new ItemStack(Material.ACACIA_LEAVES).serialize());
+//            dependencyInjector.instantiate(DefaultConfiguration.class).setDefaults();
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "Dependency Injection failed", e);
         }

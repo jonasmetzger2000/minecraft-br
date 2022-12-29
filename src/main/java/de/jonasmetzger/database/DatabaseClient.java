@@ -1,5 +1,6 @@
 package de.jonasmetzger.database;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
@@ -38,6 +39,11 @@ public class DatabaseClient {
     @DynamicDependency("config")
     public MongoCollection<Configuration> configCollection() {
         return mongoDatabase.getCollection("config", Configuration.class);
+    }
+
+    @DynamicDependency
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 
     private MongoClientSettings mongoClientSettings() {

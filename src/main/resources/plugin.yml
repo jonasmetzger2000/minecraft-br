@@ -4,4 +4,5 @@ api-version: 1.19
 main: de.jonasmetzger.minecraft.BattleRoyale
 libraries:
   - org.mongodb:mongodb-driver-sync:4.8.1
+  - com.fasterxml.jackson.core:jackson-databind:2.14.1
 commands:
