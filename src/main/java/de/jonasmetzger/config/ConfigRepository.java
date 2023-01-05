@@ -1,11 +1,13 @@
 package de.jonasmetzger.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
+import de.jonasmetzger.config.serializer.ComponentSerializer;
+import de.jonasmetzger.config.serializer.ConfigurationSerializableSerializer;
 import de.jonasmetzger.dependency.Inject;
-import lombok.SneakyThrows;
+import net.kyori.adventure.text.Component;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.Map;
 import java.util.Objects;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -13,35 +15,37 @@ import static com.mongodb.client.model.Filters.eq;
 public class ConfigRepository {
 
     @Inject("config")
-    MongoCollection<Configuration> collection;
+    MongoCollection<ConfigurationValue> configCollection;
 
-    @Inject
-    ObjectMapper objectMapper;
+    private final ComponentSerializer componentSerializer = new ComponentSerializer();
+    private final ConfigurationSerializableSerializer configurationSerializableSerializer = new ConfigurationSerializableSerializer();
 
-    public <T> T get(String key, Class<?> classToSave) {
-        return null;
+    public void save(String key, ConfigurationSerializable configurationSerializable) {
+        save(key, configurationSerializableSerializer.serialize(configurationSerializable));
     }
 
-    public Map<String, Object> get(String key) {
-        Configuration config = collection.find(eq("key", key)).first();
-        if (Objects.nonNull(config)) {
-            return config.value;
-        } else {
-            throw new RuntimeException(String.format("Key %s does not exists", key));
-        }
+    public void save(String key, Component component) {
+        save(key, componentSerializer.serialize(component));
     }
 
-    public void save(String key, Map<String, Object> value) {
-        save(key, value, true);
+    public ItemStack getItemStack(String key) {
+        return (ItemStack) configurationSerializableSerializer.deserialize(get(key));
     }
 
-    public void save(String key, Object value, boolean update) {
-        Configuration configuration = collection.find(eq("key", key)).limit(1).first();
+    public Component getComponent(String key) {
+        return componentSerializer.deserialize(get(key));
+    }
+
+    private String get(String key) {
+        return configCollection.find(eq("key", key)).limit(1).first().value;
+    }
+
+    private void save(String key, String value) {
+        ConfigurationValue configuration = configCollection.find(eq("key", key)).limit(1).first();
         if (Objects.isNull(configuration)) {
-            Map serializedValue = objectMapper.convertValue(value, Map.class);
-            collection.insertOne(new Configuration(key, serializedValue));
+            configCollection.insertOne(new ConfigurationValue(key, value));
         } else {
-            if (update) collection.findOneAndReplace(eq("key", key), new Configuration(key, value));
+            configCollection.findOneAndReplace(eq("key", key), new ConfigurationValue(key, value));
         }
     }
 }

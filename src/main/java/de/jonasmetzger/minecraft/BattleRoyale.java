@@ -1,10 +1,12 @@
 package de.jonasmetzger.minecraft;
 
-import de.jonasmetzger.config.ConfigRepository;
 import de.jonasmetzger.config.DefaultConfiguration;
+import de.jonasmetzger.config.ConfigRepository;
 import de.jonasmetzger.database.DatabaseClient;
-import de.jonasmetzger.database.MongoConfiguration;
 import de.jonasmetzger.dependency.DependencyInjector;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -25,11 +27,9 @@ public class BattleRoyale extends JavaPlugin {
         devReload();
         try {
             addDefaultDependencies();
-            dependencyInjector.instantiate(MongoConfiguration.class);
+            dependencyInjector.instantiate(DefaultConfiguration.class).load();
             dependencyInjector.instantiate(DatabaseClient.class);
-            ConfigRepository instantiate = dependencyInjector.instantiate(ConfigRepository.class);
-            instantiate.save("test", new ItemStack(Material.ACACIA_LEAVES).serialize());
-//            dependencyInjector.instantiate(DefaultConfiguration.class).setDefaults();
+            dependencyInjector.instantiate(ConfigRepository.class);
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "Dependency Injection failed", e);
         }

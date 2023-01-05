@@ -68,7 +68,7 @@ public class DependencyInjector {
                         throw new RuntimeException(String.format("Cannot set field %s in class %s", field.getType().getCanonicalName(), classToInstantiate.getCanonicalName()), e);
                     }
                 } else {
-                    throw new RuntimeException(String.format("Missing Dependency of Type %s for class %s", field.getType().getCanonicalName(), classToInstantiate.getCanonicalName()));
+                    throw new RuntimeException(String.format("Missing Dependency of Type %s with name %s for class %s", field.getType().getCanonicalName(), declaredAnnotation.value(), classToInstantiate.getCanonicalName()));
                 }
             }
         }
