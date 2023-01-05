@@ -37,15 +37,15 @@ public class ConfigRepository {
     }
 
     private String get(String key) {
-        return configCollection.find(eq("key", key)).limit(1).first().value;
+        return configCollection.find(eq("_id", key)).limit(1).first().value;
     }
 
     private void save(String key, String value) {
-        ConfigurationValue configuration = configCollection.find(eq("key", key)).limit(1).first();
+        ConfigurationValue configuration = configCollection.find(eq("_id", key)).limit(1).first();
         if (Objects.isNull(configuration)) {
             configCollection.insertOne(new ConfigurationValue(key, value));
         } else {
-            configCollection.findOneAndReplace(eq("key", key), new ConfigurationValue(key, value));
+            configCollection.findOneAndReplace(eq("_id", key), new ConfigurationValue(key, value));
         }
     }
 }

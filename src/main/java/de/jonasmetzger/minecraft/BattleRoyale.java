@@ -10,6 +10,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -29,7 +30,10 @@ public class BattleRoyale extends JavaPlugin {
             addDefaultDependencies();
             dependencyInjector.instantiate(DefaultConfiguration.class).load();
             dependencyInjector.instantiate(DatabaseClient.class);
-            dependencyInjector.instantiate(ConfigRepository.class);
+            final ConfigRepository configRepository = dependencyInjector.instantiate(ConfigRepository.class);
+            configRepository.save("item", new ItemStack(Material.ACACIA_LEAVES));
+            configRepository.save("test", Component.text("huhu", NamedTextColor.DARK_PURPLE).decorate(TextDecoration.BOLD));
+            configRepository.getItemStack("item");
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "Dependency Injection failed", e);
         }

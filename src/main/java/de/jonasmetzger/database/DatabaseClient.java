@@ -10,6 +10,7 @@ import com.mongodb.client.MongoDatabase;
 import de.jonasmetzger.config.ConfigurationValue;
 import de.jonasmetzger.dependency.DynamicDependency;
 import de.jonasmetzger.dependency.Inject;
+import de.jonasmetzger.user.User;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -48,6 +49,11 @@ public class DatabaseClient {
     @DynamicDependency("config")
     public MongoCollection<ConfigurationValue> configCollection() {
         return mongoDatabase.getCollection("config", ConfigurationValue.class);
+    }
+
+    @DynamicDependency("user")
+    public MongoCollection<User> userCollection() {
+        return mongoDatabase.getCollection("users", User.class);
     }
 
     @DynamicDependency
