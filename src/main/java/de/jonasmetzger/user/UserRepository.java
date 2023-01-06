@@ -12,7 +12,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class UserRepository {
 
-    @Inject("user")
+    @Inject("userprofile")
     private MongoCollection<UserProfile> userCollection;
 
     public void save(UserProfile userProfileToSave) {

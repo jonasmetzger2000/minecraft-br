@@ -54,9 +54,9 @@ public class DatabaseClient {
         return mongoDatabase.getCollection("config", ConfigurationValue.class);
     }
 
-    @DynamicDependency("user")
+    @DynamicDependency("userprofile")
     public MongoCollection<UserProfile> userCollection() {
-        return mongoDatabase.getCollection("users", UserProfile.class);
+        return mongoDatabase.getCollection("userprofiles", UserProfile.class);
     }
 
     @DynamicDependency
