@@ -11,6 +11,8 @@ import de.jonasmetzger.config.ConfigurationValue;
 import de.jonasmetzger.dependency.DynamicDependency;
 import de.jonasmetzger.dependency.Inject;
 import de.jonasmetzger.user.User;
+import org.bson.UuidRepresentation;
+import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -32,6 +34,7 @@ public class DatabaseClient {
         final CodecRegistry codecRegistry = fromRegistries(getDefaultCodecRegistry(), pojoCodecRegistry);
         return MongoClientSettings.builder()
                 .applyConnectionString(new ConnectionString(config.getString("mongo.connectionString")))
+                .uuidRepresentation(UuidRepresentation.STANDARD)
                 .codecRegistry(codecRegistry)
                 .build();
     }
@@ -40,7 +43,7 @@ public class DatabaseClient {
     public MongoDatabase connect() {
         mongoClient = MongoClients.create(mongoClientSettings());
         final CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
-        final CodecRegistry codecRegistry = fromRegistries(getDefaultCodecRegistry(), pojoCodecRegistry);
+        final CodecRegistry codecRegistry = fromRegistries(getDefaultCodecRegistry(), pojoCodecRegistry, CodecRegistries.fromProviders(new JacksonCodecProvider()));
 
         mongoDatabase = mongoClient.getDatabase("battle-royale").withCodecRegistry(codecRegistry);
         return mongoDatabase;

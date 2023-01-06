@@ -1,24 +1,39 @@
 package de.jonasmetzger.user;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Value;
 import org.bson.codecs.pojo.annotations.BsonId;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
+@Value
 public class User {
 
     @BsonId
     UUID id;
+    Role role;
     List<String> permissions;
     List<Infraction> infractions;
 
-    @RequiredArgsConstructor
+    @Value
+    @AllArgsConstructor
     static class Infraction {
-        UUID by;
+        String by;
         String description;
-        Instant issued;
+        Instant issuedAt;
+    }
+
+    enum Role {
+        DEFAULT,
+        VIP,
+        MVP,
+        PRO,
+        MEDIA,
+        MODERATOR_TRIAL,
+        MODERATOR,
+        ADMIN
     }
 }
