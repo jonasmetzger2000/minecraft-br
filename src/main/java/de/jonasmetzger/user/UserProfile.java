@@ -13,13 +13,13 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class UserProfile {
 
     @BsonId
     UUID id;
     List<Role> roles;
-    List<String> permissions;
     List<Infraction> infractions;
+    Instant firstJoin;
 
     @Value
     @AllArgsConstructor

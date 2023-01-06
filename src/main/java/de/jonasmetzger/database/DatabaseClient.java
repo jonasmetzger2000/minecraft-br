@@ -10,7 +10,7 @@ import com.mongodb.client.MongoDatabase;
 import de.jonasmetzger.config.ConfigurationValue;
 import de.jonasmetzger.dependency.DynamicDependency;
 import de.jonasmetzger.dependency.Inject;
-import de.jonasmetzger.user.User;
+import de.jonasmetzger.user.UserProfile;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -55,8 +55,8 @@ public class DatabaseClient {
     }
 
     @DynamicDependency("user")
-    public MongoCollection<User> userCollection() {
-        return mongoDatabase.getCollection("users", User.class);
+    public MongoCollection<UserProfile> userCollection() {
+        return mongoDatabase.getCollection("users", UserProfile.class);
     }
 
     @DynamicDependency

@@ -11,14 +11,14 @@ import static com.mongodb.client.model.Filters.eq;
 public class UserRepository {
 
     @Inject("user")
-    private MongoCollection<User> userCollection;
+    private MongoCollection<UserProfile> userCollection;
 
-    public void save(User userToSave) {
-        User user = userCollection.find(eq("_id", userToSave.getId())).limit(1).first();
-        if (Objects.isNull(user)) {
-            userCollection.insertOne(userToSave);
+    public void save(UserProfile userProfileToSave) {
+        UserProfile userProfile = userCollection.find(eq("_id", userProfileToSave.getId())).limit(1).first();
+        if (Objects.isNull(userProfile)) {
+            userCollection.insertOne(userProfileToSave);
         } else {
-            userCollection.findOneAndReplace(eq("_id", userToSave.getId()), user);
+            userCollection.findOneAndReplace(eq("_id", userProfileToSave.getId()), userProfile);
         }
     }
 
@@ -26,7 +26,7 @@ public class UserRepository {
         return Objects.nonNull(userCollection.find(eq("_id", uuid)).limit(1).first());
     }
 
-    public User get(UUID uuid) {
+    public UserProfile get(UUID uuid) {
         return userCollection.find(eq("_id", uuid)).limit(1).first();
     }
 
