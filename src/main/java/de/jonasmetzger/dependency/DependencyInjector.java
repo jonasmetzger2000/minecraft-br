@@ -5,7 +5,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DependencyInjector {
@@ -22,6 +24,13 @@ public class DependencyInjector {
             return (T) dependencies.get(classToFetch).get(key);
         }
         return null;
+    }
+
+    public <T> List<T> getDependencies(Class<T> classesToFetch) {
+        if (dependencies.containsKey(classesToFetch)) {
+            return dependencies.get(classesToFetch).values().stream().map(classesToFetch::cast).toList();
+        }
+        return List.of();
     }
 
     public void registerDependency(Class<?> classToRegister, Object objToRegister) {
