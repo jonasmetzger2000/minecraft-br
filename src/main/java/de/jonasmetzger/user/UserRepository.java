@@ -1,6 +1,8 @@
 package de.jonasmetzger.user;
 
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.ReplaceOptions;
 import de.jonasmetzger.dependency.Inject;
 
 import java.util.Objects;
@@ -14,12 +16,7 @@ public class UserRepository {
     private MongoCollection<UserProfile> userCollection;
 
     public void save(UserProfile userProfileToSave) {
-        UserProfile userProfile = userCollection.find(eq("_id", userProfileToSave.getId())).limit(1).first();
-        if (Objects.isNull(userProfile)) {
-            userCollection.insertOne(userProfileToSave);
-        } else {
-            userCollection.findOneAndReplace(eq("_id", userProfileToSave.getId()), userProfile);
-        }
+        userCollection.replaceOne(eq("_id", userProfileToSave.getId()), userProfileToSave, new ReplaceOptions().upsert(true));
     }
 
     public boolean exists(UUID uuid) {

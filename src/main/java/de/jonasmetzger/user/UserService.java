@@ -19,6 +19,12 @@ public class UserService {
     public void onJoin(Player player) {
         final UserProfile userProfile = createOrGetUserProfile(player);
         attachPermissibleObjects(player, userProfile);
+        updateLastSeen(userProfile);
+        repository.save(userProfile);
+    }
+
+    private void updateLastSeen(UserProfile userProfile) {
+        userProfile.setLastJoin(Instant.now());
     }
 
     private void attachPermissibleObjects(Player player, UserProfile userProfile) {
@@ -30,7 +36,7 @@ public class UserService {
     private UserProfile createOrGetUserProfile(Player player) {
         UserProfile userProfile;
         if (!repository.exists(player.getUniqueId())) {
-            userProfile = new UserProfile(player.getUniqueId(), List.of(UserProfile.Role.DEFAULT), new ArrayList<>(), Instant.now());
+            userProfile = new UserProfile(player.getUniqueId(), List.of(UserProfile.Role.DEFAULT), new ArrayList<>(), Instant.now(), Instant.now());
             repository.save(userProfile);
         } else {
             userProfile = repository.get(player.getUniqueId());

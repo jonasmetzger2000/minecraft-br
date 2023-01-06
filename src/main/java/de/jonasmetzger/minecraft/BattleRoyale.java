@@ -50,7 +50,7 @@ public class BattleRoyale extends JavaPlugin {
 
     void registerEvents() {
         for (Listener listener : dependencyInjector.getDependencies(Listener.class)) {
-            System.out.println("Registering Listener" + listener);
+            System.out.printf("Registering Listener %s%n", listener.getClass().getCanonicalName());
             Bukkit.getPluginManager().registerEvents(listener, this);
         }
     }

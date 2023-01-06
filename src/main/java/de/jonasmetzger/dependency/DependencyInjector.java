@@ -45,7 +45,7 @@ public class DependencyInjector {
         final Map<String, Object> classMap = dependencies.get(classToRegister);
         if (!classMap.containsKey(key)) {
             classMap.put(key, objToRegister);
-            System.out.println(String.format("Registering Dependency of class %s with key %s and object %s", classToRegister, key, objToRegister));
+            System.out.printf("Registering Dependency of class %s with key %s and object %s%n", classToRegister, key, objToRegister);
         }
     }
 

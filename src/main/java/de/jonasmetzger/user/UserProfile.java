@@ -1,9 +1,6 @@
 package de.jonasmetzger.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Value;
+import lombok.*;
 import org.bson.codecs.pojo.annotations.BsonId;
 
 import java.time.Instant;
@@ -11,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserProfile {
@@ -20,6 +18,7 @@ public class UserProfile {
     List<Role> roles;
     List<Infraction> infractions;
     Instant firstJoin;
+    Instant lastJoin;
 
     @Value
     @AllArgsConstructor
