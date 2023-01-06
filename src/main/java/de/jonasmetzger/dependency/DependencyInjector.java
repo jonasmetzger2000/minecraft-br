@@ -27,10 +27,13 @@ public class DependencyInjector {
     }
 
     public <T> List<T> getDependencies(Class<T> classesToFetch) {
-        if (dependencies.containsKey(classesToFetch)) {
-            return dependencies.get(classesToFetch).values().stream().map(classesToFetch::cast).toList();
+        List<T> classes = new ArrayList<>();
+        for (Map.Entry<Class<?>, Map<String, Object>> entry : dependencies.entrySet()) {
+            if (classesToFetch.isAssignableFrom(entry.getKey())) {
+                classes.addAll(entry.getValue().values().stream().map(classesToFetch::cast).toList());
+            }
         }
-        return List.of();
+        return classes;
     }
 
     public void registerDependency(Class<?> classToRegister, Object objToRegister) {

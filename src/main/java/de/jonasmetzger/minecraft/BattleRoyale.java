@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -38,10 +39,19 @@ public class BattleRoyale extends JavaPlugin {
             dependencyInjector.instantiate(UserRepository.class);
             // service
             dependencyInjector.instantiate(UserService.class);
+            // events
+            dependencyInjector.instantiate(ServerJoinEvent.class);
 
-            Bukkit.getPluginManager().registerEvents(dependencyInjector.instantiate(ServerJoinEvent.class), this);
+            registerEvents();
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "Dependency Injection failed", e);
+        }
+    }
+
+    void registerEvents() {
+        for (Listener listener : dependencyInjector.getDependencies(Listener.class)) {
+            System.out.println("Registering Listener" + listener);
+            Bukkit.getPluginManager().registerEvents(listener, this);
         }
     }
 
