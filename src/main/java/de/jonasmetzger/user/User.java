@@ -1,6 +1,8 @@
 package de.jonasmetzger.user;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 import org.bson.codecs.pojo.annotations.BsonId;
 
@@ -8,13 +10,14 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+@Getter
 @AllArgsConstructor
-@Value
+@NoArgsConstructor
 public class User {
 
     @BsonId
     UUID id;
-    Role role;
+    List<Role> roles;
     List<String> permissions;
     List<Infraction> infractions;
 
@@ -34,6 +37,6 @@ public class User {
         MEDIA,
         MODERATOR_TRIAL,
         MODERATOR,
-        ADMIN
+        ADMIN;
     }
 }
