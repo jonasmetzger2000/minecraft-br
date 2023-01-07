@@ -2,7 +2,6 @@
 version: '3.1'
 
 services:
-
   minecraft-server:
     container_name: minecraft
     image: itzg/minecraft-server
@@ -28,6 +27,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - ./db:/data/db
 
   mongo-express:
     container_name: mongo-express
