@@ -15,7 +15,7 @@ public class SaveItemCommand extends PlayerCommand {
     ConfigRepository configRepository;
 
     public SaveItemCommand() {
-        super("saveitem", "saves an itemstack in the mainhand", "/saveitem <key>", List.of());
+        super("admin", "saveitem", "saves an itemstack in the mainhand", "/saveitem <key>");
     }
 
     @Override

@@ -9,6 +9,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class UserService {
 
@@ -27,6 +28,10 @@ public class UserService {
         groupManager.setPlayerTeam(player, userProfile);
         updateLastSeen(userProfile);
         repository.save(userProfile);
+    }
+
+    public UserProfile getProfile(UUID uuid) {
+        return repository.get(uuid);
     }
 
     private void updateLastSeen(UserProfile userProfile) {

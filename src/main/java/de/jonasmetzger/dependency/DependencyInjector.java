@@ -65,39 +65,50 @@ public class DependencyInjector {
         registerDependency(classToInstantiate, obj);
         // inject fields
         for (Field field : classToInstantiate.getDeclaredFields()) {
-            if (field.isAnnotationPresent(Inject.class)) {
-                final Inject declaredAnnotation = field.getDeclaredAnnotation(Inject.class);
-                if (dependencies.containsKey(field.getType())) {
-                    field.setAccessible(true);
-                    try {
-                        final Map<String, Object> classes = dependencies.get(field.getType());
-                        if (classes.containsKey(declaredAnnotation.value())) {
-                            field.set(obj, classes.get(declaredAnnotation.value()));
-                        } else {
-                            throw new RuntimeException(String.format("Cannot inject class %s with key %s into field %s in class %s", field.getType(), declaredAnnotation.value(), field.getName(), classToInstantiate.getCanonicalName()));
-                        }
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(String.format("Cannot set field %s in class %s", field.getType().getCanonicalName(), classToInstantiate.getCanonicalName()), e);
-                    }
-                } else {
-                    throw new RuntimeException(String.format("Missing Dependency of Type %s with name %s for class %s", field.getType().getCanonicalName(), declaredAnnotation.value(), classToInstantiate.getCanonicalName()));
-                }
-            }
+            injectField(classToInstantiate, obj, field);
+        }
+        for (Field field : classToInstantiate.getFields()) {
+            injectField(classToInstantiate, obj, field);
         }
         // find dynamic dependencies
         for (Method method : classToInstantiate.getDeclaredMethods()) {
-            if (method.isAnnotationPresent(DynamicDependency.class)) {
-                final DynamicDependency declaredAnnotation = method.getDeclaredAnnotation(DynamicDependency.class);
-                method.setAccessible(true);
-                try {
-                    final Object dynamicDependency = method.invoke(obj);
-                    registerDependency(method.getReturnType(), declaredAnnotation.value(), dynamicDependency);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(String.format("Cannot invoke 0-args postConstruct with name %s in class %s", method.getName(), classToInstantiate.getCanonicalName()), e);
-                }
-            }
+            findDynamicDependency(classToInstantiate, obj, method);
         }
         return obj;
+    }
+
+    private <T> void findDynamicDependency(Class<T> classToInstantiate, T obj, Method method) {
+        if (method.isAnnotationPresent(DynamicDependency.class)) {
+            final DynamicDependency declaredAnnotation = method.getDeclaredAnnotation(DynamicDependency.class);
+            method.setAccessible(true);
+            try {
+                final Object dynamicDependency = method.invoke(obj);
+                registerDependency(method.getReturnType(), declaredAnnotation.value(), dynamicDependency);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(String.format("Cannot invoke 0-args postConstruct with name %s in class %s", method.getName(), classToInstantiate.getCanonicalName()), e);
+            }
+        }
+    }
+
+    private <T> void injectField(Class<T> classToInstantiate, T obj, Field field) {
+        if (field.isAnnotationPresent(Inject.class)) {
+            final Inject declaredAnnotation = field.getDeclaredAnnotation(Inject.class);
+            if (dependencies.containsKey(field.getType())) {
+                field.setAccessible(true);
+                try {
+                    final Map<String, Object> classes = dependencies.get(field.getType());
+                    if (classes.containsKey(declaredAnnotation.value())) {
+                        field.set(obj, classes.get(declaredAnnotation.value()));
+                    } else {
+                        throw new RuntimeException(String.format("Cannot inject class %s with key %s into field %s in class %s", field.getType(), declaredAnnotation.value(), field.getName(), classToInstantiate.getCanonicalName()));
+                    }
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(String.format("Cannot set field %s in class %s", field.getType().getCanonicalName(), classToInstantiate.getCanonicalName()), e);
+                }
+            } else {
+                throw new RuntimeException(String.format("Missing Dependency of Type %s with name %s for class %s", field.getType().getCanonicalName(), declaredAnnotation.value(), classToInstantiate.getCanonicalName()));
+            }
+        }
     }
 
 }
