@@ -19,7 +19,7 @@ public class SaveItemCommand extends PlayerCommand {
     }
 
     @Override
-    boolean onCommand(Player player, String[] args) {
+    protected boolean onCommand(Player player, String[] args) {
         if (args.length > 0) {
             final PlayerInventory inventory = player.getInventory();
             configRepository.save(args[0], inventory.getItemInMainHand());

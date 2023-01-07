@@ -17,7 +17,7 @@ public abstract class PlayerCommand extends BukkitCommand {
     @Inject
     public ConfigRepository configRepository;
 
-    protected PlayerCommand(@NotNull String label, @NotNull String name, @NotNull String description, @NotNull String usageMessage) {
+    public PlayerCommand(@NotNull String label, @NotNull String name, @NotNull String description, @NotNull String usageMessage) {
         super(name, description, usageMessage, List.of());
         setLabel(label);
     }
@@ -40,6 +40,6 @@ public abstract class PlayerCommand extends BukkitCommand {
         return player.hasPermission(String.format("%s.%s", getLabel(), getName()));
     }
 
-    abstract boolean onCommand(Player player, String[] args);
+    protected abstract boolean onCommand(Player player, String[] args);
 
 }

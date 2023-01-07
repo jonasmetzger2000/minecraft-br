@@ -41,7 +41,6 @@ public class UserProfile {
         MVP,
         PRO,
         MEDIA,
-        MODERATOR_TRIAL,
         MODERATOR,
         ADMIN;
     }

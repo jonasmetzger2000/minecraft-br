@@ -9,7 +9,7 @@ public class DebugCommand extends PlayerCommand {
     }
 
     @Override
-    boolean onCommand(Player player, String[] args) {
+    protected boolean onCommand(Player player, String[] args) {
         return false;
     }
 }

@@ -4,11 +4,11 @@ import de.jonasmetzger.dependency.Inject;
 import de.jonasmetzger.minecraft.scoreboard.GroupManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class UserService {
@@ -23,11 +23,21 @@ public class UserService {
     JavaPlugin plugin;
 
     public void onJoin(Player player) {
-        final UserProfile userProfile = createOrGetUserProfile(player);
+        final UserProfile userProfile = createOrGetUserProfile(player.getUniqueId());
         attachPermissibleObjects(player, userProfile);
         groupManager.setPlayerTeam(player, userProfile);
         updateLastSeen(userProfile);
         repository.save(userProfile);
+    }
+
+    public boolean addGroup(UUID uuid, UserProfile.Group group) {
+        final UserProfile userProfile = createOrGetUserProfile(uuid);
+        if (Objects.nonNull(userProfile)) {
+            userProfile.groups.add(group);
+            repository.save(userProfile);
+            return true;
+        }
+        return false;
     }
 
     public UserProfile getProfile(UUID uuid) {
@@ -44,13 +54,13 @@ public class UserService {
         }
     }
 
-    private UserProfile createOrGetUserProfile(Player player) {
+    private UserProfile createOrGetUserProfile(UUID playerId) {
         UserProfile userProfile;
-        if (!repository.exists(player.getUniqueId())) {
-            userProfile = new UserProfile(player.getUniqueId(), List.of(UserProfile.Group.DEFAULT), new ArrayList<>(), Instant.now(), Instant.now());
+        if (!repository.exists(playerId)) {
+            userProfile = new UserProfile(playerId, List.of(UserProfile.Group.DEFAULT), new ArrayList<>(), Instant.now(), Instant.now());
             repository.save(userProfile);
         } else {
-            userProfile = repository.get(player.getUniqueId());
+            userProfile = repository.get(playerId);
         }
         return userProfile;
     }
