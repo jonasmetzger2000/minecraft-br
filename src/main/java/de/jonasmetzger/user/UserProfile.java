@@ -28,6 +28,13 @@ public class UserProfile {
         Instant issuedAt;
     }
 
+    @Value
+    @AllArgsConstructor
+    static class Games {
+        UUID gameId;
+        Integer placement;
+    }
+
     enum Role {
         DEFAULT,
         VIP,
