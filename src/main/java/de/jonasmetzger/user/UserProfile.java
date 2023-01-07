@@ -15,7 +15,7 @@ public class UserProfile {
 
     @BsonId
     UUID id;
-    List<Role> roles;
+    List<Group> groups;
     List<Infraction> infractions;
     Instant firstJoin;
     Instant lastJoin;
@@ -35,7 +35,7 @@ public class UserProfile {
         Integer placement;
     }
 
-    enum Role {
+    public enum Group {
         DEFAULT,
         VIP,
         MVP,

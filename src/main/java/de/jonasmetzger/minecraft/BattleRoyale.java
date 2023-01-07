@@ -4,8 +4,10 @@ import de.jonasmetzger.config.DefaultConfiguration;
 import de.jonasmetzger.config.ConfigRepository;
 import de.jonasmetzger.database.DatabaseClient;
 import de.jonasmetzger.dependency.DependencyInjector;
+import de.jonasmetzger.minecraft.commands.DebugCommand;
 import de.jonasmetzger.minecraft.commands.SaveItemCommand;
 import de.jonasmetzger.minecraft.events.ServerJoinEvent;
+import de.jonasmetzger.minecraft.scoreboard.GroupManager;
 import de.jonasmetzger.user.UserRepository;
 import de.jonasmetzger.user.UserService;
 import lombok.SneakyThrows;
@@ -36,12 +38,15 @@ public class BattleRoyale extends JavaPlugin {
             // repos
             dependencyInjector.instantiate(ConfigRepository.class);
             dependencyInjector.instantiate(UserRepository.class);
+            // scoreboard
+            dependencyInjector.instantiate(GroupManager.class);
             // service
             dependencyInjector.instantiate(UserService.class);
             // events
             dependencyInjector.instantiate(ServerJoinEvent.class);
             // commands
             dependencyInjector.instantiate(SaveItemCommand.class);
+            dependencyInjector.instantiate(DebugCommand.class);
 
             registerEvents();
             registerCommands();
