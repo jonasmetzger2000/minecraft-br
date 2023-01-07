@@ -11,6 +11,7 @@ import java.util.List;
 public abstract class PlayerCommand extends BukkitCommand {
     protected PlayerCommand(@NotNull String name, @NotNull String description, @NotNull String usageMessage, @NotNull List<String> aliases) {
         super(name, description, usageMessage, aliases);
+        setLabel("br");
     }
 
     @Override
