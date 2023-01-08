@@ -59,7 +59,7 @@ public class UserService {
     private UserProfile createOrGetUserProfile(UUID playerId) {
         UserProfile userProfile;
         if (!repository.exists(playerId)) {
-            userProfile = new UserProfile(playerId, List.of(UserProfile.Group.DEFAULT), new ArrayList<>(), Instant.now(), Instant.now());
+            userProfile = new UserProfile(playerId, new ArrayList<>(List.of(UserProfile.Group.DEFAULT)), new ArrayList<>(), Instant.now(), Instant.now());
             repository.save(userProfile);
         } else {
             userProfile = repository.get(playerId);
