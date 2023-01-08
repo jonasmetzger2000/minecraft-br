@@ -18,7 +18,7 @@ public class ServerJoinEvent implements Listener {
     @EventHandler
     public void serverJoin(PlayerJoinEvent event) {
         userService.onJoin(event.getPlayer());
-        spectatorService.onPlayerJoin(event.getPlayer());
+        spectatorService.onPlayerJoin(event);
     }
 
 }
