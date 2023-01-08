@@ -9,6 +9,7 @@ import de.jonasmetzger.minecraft.commands.DebugCommand;
 import de.jonasmetzger.minecraft.commands.SaveItemCommand;
 import de.jonasmetzger.minecraft.commands.groups.GroupAddCommand;
 import de.jonasmetzger.minecraft.events.GameModeSwitchEvent;
+import de.jonasmetzger.minecraft.events.PlayerChatEvent;
 import de.jonasmetzger.minecraft.events.ServerJoinEvent;
 import de.jonasmetzger.minecraft.events.ServerLeaveEvent;
 import de.jonasmetzger.minecraft.scoreboard.GroupManager;
@@ -51,6 +52,7 @@ public class BattleRoyale extends JavaPlugin {
             dependencyInjector.instantiate(ServerJoinEvent.class);
             dependencyInjector.instantiate(ServerLeaveEvent.class);
             dependencyInjector.instantiate(GameModeSwitchEvent.class);
+            dependencyInjector.instantiate(PlayerChatEvent.class);
             // commands
             dependencyInjector.instantiate(SaveItemCommand.class);
             dependencyInjector.instantiate(DebugCommand.class);

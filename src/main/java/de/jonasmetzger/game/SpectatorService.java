@@ -66,11 +66,11 @@ public class SpectatorService {
         }
     }
 
-    private boolean isSpectator(GameMode gameMode) {
+    public boolean isSpectator(GameMode gameMode) {
         return gameMode.equals(CREATIVE) || gameMode.equals(SPECTATOR);
     }
 
-    private boolean isPlayer(GameMode gameMode) {
+    public boolean isPlayer(GameMode gameMode) {
         return gameMode.equals(SURVIVAL);
     }
 }

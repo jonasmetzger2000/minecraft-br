@@ -2,9 +2,6 @@ package de.jonasmetzger.minecraft.commands;
 
 import de.jonasmetzger.config.ConfigRepository;
 import de.jonasmetzger.dependency.Inject;
-import de.jonasmetzger.user.UserProfile;
-import de.jonasmetzger.user.UserService;
-import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
