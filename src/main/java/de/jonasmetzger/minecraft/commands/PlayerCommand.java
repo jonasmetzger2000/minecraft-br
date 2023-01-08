@@ -26,9 +26,7 @@ public abstract class PlayerCommand extends BukkitCommand {
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
         if (sender instanceof final Player player) {
             if (hasPermissions(player)) {
-                if (!onCommand(player, args)) {
-                    player.sendMessage(Component.text(usageMessage));
-                }
+                player.sendMessage(onCommand(player, args).getComponent());
             } else {
                 player.sendMessage(configRepository.getComponent("messages.permissions.missing"));
             }
@@ -40,6 +38,6 @@ public abstract class PlayerCommand extends BukkitCommand {
         return player.hasPermission(String.format("%s.%s", getLabel(), getName()));
     }
 
-    protected abstract boolean onCommand(Player player, String[] args);
+    protected abstract Feedback onCommand(Player player, String[] args);
 
 }

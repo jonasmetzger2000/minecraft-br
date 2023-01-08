@@ -33,8 +33,10 @@ public class UserService {
     public boolean addGroup(UUID uuid, UserProfile.Group group) {
         final UserProfile userProfile = createOrGetUserProfile(uuid);
         if (Objects.nonNull(userProfile)) {
-            userProfile.groups.add(group);
-            repository.save(userProfile);
+            if (!userProfile.getGroups().contains(group)) {
+                userProfile.groups.add(group);
+                repository.save(userProfile);
+            }
             return true;
         }
         return false;

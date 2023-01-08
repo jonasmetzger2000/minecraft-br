@@ -1,12 +1,10 @@
 package de.jonasmetzger.minecraft.commands.groups;
 
 import de.jonasmetzger.dependency.Inject;
-import de.jonasmetzger.minecraft.commands.CommandFeedback;
+import de.jonasmetzger.minecraft.commands.Feedback;
 import de.jonasmetzger.minecraft.commands.PlayerCommand;
 import de.jonasmetzger.user.UserProfile;
 import de.jonasmetzger.user.UserService;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static de.jonasmetzger.minecraft.commands.CommandFeedback.*;
+import static de.jonasmetzger.minecraft.commands.Feedback.*;
 
 public class GroupAddCommand extends PlayerCommand {
 
@@ -29,7 +27,7 @@ public class GroupAddCommand extends PlayerCommand {
     }
 
     @Override
-    protected boolean onCommand(Player player, String[] args) {
+    protected Feedback onCommand(Player player, String[] args) {
         UserProfile.Group group;
         if (args.length == 2) {
             try {
@@ -37,19 +35,19 @@ public class GroupAddCommand extends PlayerCommand {
                 group = UserProfile.Group.valueOf(args[1]);
                 if (Objects.nonNull(playerId)) {
                     if (userService.addGroup(playerId, group)) {
-                        success(player, "Group added");
+                        return Feedback.success().message("Group added.");
                     } else {
-                        error(player, String.format("No group with Name %s", args[1]));
+                        return Feedback.error().message( String.format("No group with Name %s", args[1]));
                     }
                 } else {
-                    error(player, String.format("Error resolving name %s", args[0]));
+                    return Feedback.error().message(String.format("Error resolving name %s", args[0]));
                 }
             } catch (IllegalArgumentException e) {
-                error(player, String.format("No group with Name %s", args[1]));
+                return Feedback.error().message(String.format("No group with Name %s", args[1]));
             }
-
+        } else {
+            return Feedback.error().message("Invalid arg size");
         }
-        return false;
     }
 
     @Override
