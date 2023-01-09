@@ -1,0 +1,2 @@
+{"_id":{"$binary":{"base64":"N+X2rDWVRxuvCmdmXDeiyw==","subType":"04"}},"firstJoin":{"$date":"2023-01-07T22:31:03.058Z"},"groups":["DEFAULT"],"infractions":[],"lastJoin":{"$date":"2023-01-08T19:19:48.354Z"}}
+{"_id":{"$binary":{"base64":"KZRni6IyTa2f+rUINfXTKg==","subType":"04"}},"firstJoin":{"$date":"2023-01-07T22:31:07.893Z"},"groups":["DEFAULT","PRO","ADMIN"],"infractions":[],"lastJoin":{"$date":"2023-01-08T19:18:57.874Z"}}

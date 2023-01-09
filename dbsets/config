@@ -1,0 +1,8 @@
+{"_id":"group.default.prefix","value":"{\"text\":\"\"}"}
+{"_id":"group.vip.prefix","value":"{\"color\":\"green\",\"text\":\"*\"}"}
+{"_id":"group.mvp.prefix","value":"{\"color\":\"blue\",\"text\":\"*\"}"}
+{"_id":"group.pro.prefix","value":"{\"color\":\"gold\",\"text\":\"*\"}"}
+{"_id":"group.media.prefix","value":"{\"color\":\"aqua\",\"text\":\"*\"}"}
+{"_id":"group.moderator.prefix","value":"{\"color\":\"dark_purple\",\"text\":\"*\"}"}
+{"_id":"group.admin.prefix","value":"{\"color\":\"red\",\"text\":\"*\"}"}
+{"_id":"messages.permissions.missing","value":"{\"color\":\"red\",\"text\":\"You dont have the required Permissions to execute this command\"}"}
